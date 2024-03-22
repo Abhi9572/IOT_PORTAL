@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Management</title>
+</head>
+<body>
+    <h2>Subscribe Your Devices</h2>
+        
+    <% if(error.length > 0) { %>
+      <p class="error"><%= error %></p>
+    <% } %>
+    <form action="/subscription" method="post">
+      <input type="text" name="deviceid" placeholder="DeviceId" class="detail" />
+      <input type="submit" class="btn int" value="Subscribe">
+      </form>
+</body>
+</html>
+
+

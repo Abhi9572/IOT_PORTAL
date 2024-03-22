@@ -1,0 +1,32 @@
+<%- include('header.ejs', {title: 'Report', userImg:'/image/iot_3.png',
+currentPage:'report'}) %>
+
+<div class="col-12">
+  <div class="bg-light rounded h-100 p-4">
+    <h4>Device Status Report</h4>
+    <div class="d-flex justify-content-between my-3">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>DeviceId</th>
+              <th>Message</th>
+              <th>CreatedAt</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% statusData.forEach(deviceStatus => { %>
+            <tr>
+              <td><%= deviceStatus.deviceId %></td>
+              <td><%= deviceStatus.status %></td>
+              <td><%= deviceStatus.createdAt %></td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('footer.ejs') %>

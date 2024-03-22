@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/stylesheets/style1.css" />
+    <title>Home</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="content">
+        <p class="header">Register for access.</p>
+        <% if(error.length > 0) { %>
+        <p class="error"><%= error %></p>
+        <% } %>
+        <form action="/register" method="post">
+          <input
+            type="email"
+            name="email"
+            placeholder="email"
+            class="detail"
+          /><br />
+          <input
+            type="text"
+            name="username"
+            placeholder="username"
+            class="detail"
+          /><br />
+          <input
+            type="password"
+            name="password"
+            placeholder="password"
+            class="detail"
+          /><br />
+          <input type="submit" class="btn int" value="Register Account" />
+        </form>
+        <h4><a href="/forgot-password">Forgot your password?</a></h4>
+        <br />
+        <footer>
+          <p>
+            By continuing, you aggre to our
+            <b>Terms of Service, Privacy policy.</b>
+          </p>
+          <hr />
+          <a href="/login">If Registerd? Login</a>
+        </footer>
+      </div>
+    </div>
+  </body>
+</html>

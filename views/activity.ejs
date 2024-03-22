@@ -1,0 +1,50 @@
+<%- include('header.ejs',{title: 'Device Activity', userImg:'/image/iot_4.png',
+currentPage:'devicelist'}) %>
+
+<div class="col-12">
+  <div class="bg-light rounded h-100 p-4">
+    <h2>Device Activity of <%= deviceName %> (ID: <%= deviceId %>)</h2>
+    <form action="/<%= deviceId %>/activity/download" method="get">
+      <label for="startDate">Start Date:</label>
+      <input type="date" id="startDate" name="startDate" required />
+      <label for="endDate">End Date:</label>
+      <input type="date" id="endDate" name="endDate" required />
+      <button
+        type="submit"
+        onclick="return confirm('Do you want to download Activity Report data?')"
+      >
+        Filter
+      </button>
+    </form>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>On Duration (hours)</th>
+            <th>Off Duration (hours)</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% Object.keys(activity).forEach(date => { %>
+          <tr>
+            <td>
+              <%= activity[date].onDuration.hours %> hours <%=
+              activity[date].onDuration.minutes %> minutes <%=
+              activity[date].onDuration.seconds %> seconds
+            </td>
+            <td>
+              <%= activity[date].offDuration.hours %> hours <%=
+              activity[date].offDuration.minutes %> minutes <%=
+              activity[date].offDuration.seconds %> seconds
+            </td>
+            <td><%= date %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('footer.ejs') %>

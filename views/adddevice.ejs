@@ -1,0 +1,51 @@
+<%- include('header.ejs', {title: 'Add Device', userImg: '/image/iot_2.png',
+currentPage:'adddevice'}) %>
+
+<!-- Sign In Start -->
+<div class="container-fluid">
+  <div
+    class="row h-100 align-items-center justify-content-center"
+    style="min-height: 100vh"
+  >
+    <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+      <div class="bg-light rounded p-4 p-sm-5 my-4 mx-3">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <h3>Add Your Device</h3>
+        </div>
+
+        <% if(error.length > 0) { %>
+        <p class="error"><%= error %></p>
+        <% } %>
+        <form action="/adddevice" method="post">
+          <div class="form-floating mb-4">
+            <input
+              type="text"
+              name="devicename"
+              class="form-control"
+              id="deviceName"
+              placeholder="DeviceName"
+            />
+            <label for="deviceName">DeviceName</label>
+          </div>
+          <div class="form-floating mb-4">
+            <input
+              type="text"
+              name="deviceid"
+              class="form-control"
+              id="deviceId"
+              placeholder="DeviceId"
+            />
+            <label for="deviceId">DeviceId</label>
+          </div>
+          <input
+            type="submit"
+            class="btn btn-primary py-3 w-100 mb-4"
+            value="Save Device"
+          />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('footer.ejs') %>
