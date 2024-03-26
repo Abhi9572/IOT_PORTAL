@@ -94,7 +94,7 @@ currentPage:'report'}) %>
           <tr>
             <td><%= deviceStatus.deviceId %></td>
             <td><%= deviceStatus.status %></td>
-            <td><%= deviceStatus.createdAt %></td>
+            <td><%= new Date(deviceStatus.createdAt).toString('en-IN', { timeZone: 'Asia/Kolkata' }) %></td>
           </tr>
           <% }); %>
         </tbody>
