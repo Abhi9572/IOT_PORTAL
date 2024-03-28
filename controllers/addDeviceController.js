@@ -62,7 +62,7 @@ async function addDevice(req, res) {
       { userId: user._id },
       "deviceId status createdAt"
     );
-    console.log(deviceStatusData);
+    //console.log(deviceStatusData);
 
     req.flash("success", "Device saved successfully.");
     res.redirect("/adddevice");

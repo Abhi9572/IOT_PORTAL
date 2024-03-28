@@ -11,11 +11,12 @@ async function getReport(req, res) {
     //device
     // console.log(user.username);
     // Fetch data from the DeviceStatus model
-    const deviceStatusData = await DeviceStatus.find(
+    const result = await DeviceStatus.find(
       { userId: user._id },
       "deviceId status userId createdAt"
     );
-    console.log(deviceStatusData);
+    const deviceStatusData = result.reverse()
+    //console.log(deviceStatusData);
 
     // Render the report.ejs file and pass the data to it
     res.render("report", { deviceStatusData, user: user });

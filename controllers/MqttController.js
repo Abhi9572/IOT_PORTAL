@@ -25,12 +25,12 @@ module.exports = {
       try {
         // Fetch devices belonging to the current user from the database
         const devices = await Device.find({ user: user._id }, "deviceId");
-        console.log(devices);
+        //console.log(devices);
 
         // Subscribe to each device's topic
         devices.forEach((device) => {
           client.subscribe(device.deviceId);
-          console.log(`Subscribed to topic ${device.deviceId}`);
+          //console.log(`Subscribed to topic ${device.deviceId}`);
         });
       } catch (error) {
         console.error("Error fetching devices:", error);
@@ -47,28 +47,43 @@ module.exports = {
         if (isValidMessageFormat(payload)) {
           // Extract the necessary information from the payload
           const deviceId = payload.deviceId;
+          //console.log(deviceId);
           const command = payload.command;
+          //console.log(command);
 
           // Check if deviceId and command are valid
           if (deviceId && command) {
             // Check if the topic corresponds to a device of the user
             const device = await Device.findOne({ deviceId, user: user._id });
-            console.log(device);
+            //console.log(device.statusDevice);
 
             if (device && topic === device.deviceId) {
+              // Check if the device status is already the same as the command
+              if (device.statusDevice === command) {
+                //console.log(`Device is already ${command}`);
+                // Log the error or take appropriate action
+                return;
+              }
+
               const deviceStatus = new DeviceStatus({
                 deviceId: deviceId,
                 devicePrimaryId: device._id,
                 userId: device.user,
                 status: command,
               });
-              console.log(deviceStatus);
+              //console.log(deviceStatus);
 
               // Save the DeviceStatus document to the database
               await deviceStatus.save();
-              console.log(
-                `Device status saved for deviceId ${deviceId}: ${command}`
+              const updatedDevice = await Device.findOneAndUpdate(
+                { deviceId, user: user._id },
+                { statusDevice: command },
+                { new: true }
               );
+              //console.log(updatedDevice);
+              //console.log(
+               // `Device status saved for deviceId ${deviceId}: ${command}`
+              //);
             } else {
               console.log(
                 `Error: Device with deviceId ${deviceId} not found or topic does not match.`

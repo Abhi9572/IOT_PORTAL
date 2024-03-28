@@ -13,6 +13,7 @@ currentPage:'devicelist'}) %>
               <th>Device ID</th>
               <th>Status</th>
               <th>Action</th>
+              <th>Publish Message</th>
             </tr>
           </thead>
           <tbody>
@@ -24,11 +25,9 @@ currentPage:'devicelist'}) %>
                             <td>
                               <a href="/editDevice/<%= device._id %>" class="btn btn-primary">Edit Device</a>
                             </td> -->
+              <!-- Render the statusDevice -->
               <td>
-                <% const recentStatus = deviceStatuses.find(status =>
-                status.deviceId === device.deviceId); %> <% if (recentStatus &&
-                recentStatus.status === "on") { %>
-                <!-- <span style="color: green">&#x25CF;</span>  -->
+                <% if (device.statusDevice === "on") { %>
                 <span
                   style="
                     width: 15px;
@@ -52,6 +51,7 @@ currentPage:'devicelist'}) %>
                 <!-- Red dot for off status -->
                 <% } %>
               </td>
+
               <td>
                 <!-- View Activity Button -->
                 <a
@@ -75,6 +75,20 @@ currentPage:'devicelist'}) %>
                     <i class="fas fa-trash"></i>
                   </button>
                 </form>
+              </td>
+              <td>
+                <!-- Status container and toggle button for each device -->
+                <div>
+                  Status:
+                  <span id="currentStatus_<%= device.deviceId %>"><%= device.statusDevice %></span>
+                </div>
+                <button
+                  class="toggleButton"
+                  onclick="toggleStatus('<%= device.deviceId %>')"
+                  data-device-id="<%= device.deviceId %>"
+                >
+                  Publish
+                </button>
               </td>
             </tr>
             <% }) %>

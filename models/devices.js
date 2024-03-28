@@ -17,6 +17,10 @@ const addDeviceSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  statusDevice: {
+    type: String,
+    default: 'off' // Set default value to 'off'
+},
 });
 
 module.exports = mongoose.model("Device", addDeviceSchema);

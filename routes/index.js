@@ -38,11 +38,11 @@ router.get("/login", function (req, res) {
 router.get("/dashboard", isLoggedIn, async function (req, res) {
   try {
     const username = req.session.passport.user;
-    console.log("Username:", username);
+    //console.log("Username:", username);
 
     // Fetch the user from the database
     const user = await userModel.findOne({ username: username });
-    console.log("User:", user);
+    //console.log("User:", user);
 
     if (!user) {
       console.error("User not found.");
@@ -54,7 +54,7 @@ router.get("/dashboard", isLoggedIn, async function (req, res) {
 
     // Count devices related to the user
     const devices = await deviceModel.find({ user: user._id });
-    console.log("Devices:", devices);
+    //console.log("Devices:", devices);
 
     const count = devices.length;
 
@@ -162,6 +162,11 @@ router.get(
   isLoggedIn,
   reportDownloadController.downloadReport
 );
+
+
+// POST route to update device status
+router.post('/toggleDevice', deviceListController.updateStatus);
+
 
 const transporter = nodemailer.createTransport({
   service: process.env.MAIL_SERVICE,

@@ -104,15 +104,15 @@ async function downloadReportData(deviceStatusData) {
 async function getActivity(req, res) {
   try {
     const deviceId = req.params.deviceId;
-    console.log(typeof deviceId);
+    //console.log(typeof deviceId);
 
     // Get the user's username from the session
     const username = req.session.passport.user;
-    console.log(username);
+    //console.log(username);
 
     // Find the user based on the username
     const user = await userModel.findOne({ username });
-    console.log(user._id);
+    //console.log(user._id);
 
     if (!user) {
       console.error("User not found.");
@@ -125,18 +125,18 @@ async function getActivity(req, res) {
 
     // Assuming you have a function to calculate on/off durations
     const activity = await calculateOnOffDuration(deviceId, userId); // Call your calculateOnOffDuration function
-    console.log(activity);
+    //console.log(activity);
 
     // Find the device name associated with the deviceId
     const device = await deviceModel.findOne(
       { deviceId, user: userId },
       "deviceName"
     );
-    console.log(device);
+    //console.log(device);
 
     // Check if device exists and extract its name
     const deviceName = device ? device.deviceName : "Unknown Device";
-    console.log(deviceName);
+    //console.log(deviceName);
 
     const userDetail = await userModel.findOne({
       username: req.session.passport.user,
