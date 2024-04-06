@@ -9,13 +9,9 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const localStrategy = require("passport-local");
 const { connectToMongoDB } = require("./mongoose");
-const mqtt = require("mqtt");
 const indexRouter = require("./routes/index");
 const User = require("./models/users");
 const Device = require("./models/devices");
-const { create } = require("domain");
-
-const mongoose = require("mongoose");
 
 const forgotPassword = require("./routes/forgot-password");
 const DeviceStatus = require("./models/DeviceStatus");
@@ -49,7 +45,38 @@ app.use(passport.session());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-passport.use(new localStrategy(User.authenticate()));
+// passport.use(new localStrategy(User.authenticate()));
+
+passport.use(
+  new localStrategy(
+    {
+      usernameField: "username", // Specify the field for username or email
+      passwordField: "password", // Specify the field for password
+    },
+    function (username, password, done) {
+      // Find the user by username or email
+      User.findOne({ $or: [{ username: username }, { email: username }] })
+        .then((user) => {
+          if (!user) {
+            return done(null, false, {
+              message: "Incorrect username or email.",
+            });
+          }
+          // Use Mongoose's built-in method to authenticate the user
+          user
+            .authenticate(password)
+            .then((isMatch) => {
+              if (!isMatch) {
+                return done(null, false, { message: "Incorrect password." });
+              }
+              return done(null, user);
+            })
+            .catch((err) => done(err));
+        })
+        .catch((err) => done(err));
+    }
+  )
+);
 
 app.use(logger("dev"));
 app.use(express.json());

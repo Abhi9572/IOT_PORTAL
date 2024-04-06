@@ -112,7 +112,7 @@ async function success(req, res) {
     //res.render('success', {user:user});
   } catch (error) {
     console.error("Error fetching user :", error);
-    res.render("error", { message: "Error fetching user" });
+    res.render("error", { message: "Error fetching user", error:error });
   }
 }
 
