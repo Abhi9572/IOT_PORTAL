@@ -79,7 +79,13 @@ async function updateStatus(req, res) {
     );
 
     // MQTT Broker Connection
-    const mqttClient = mqtt.connect(process.env.MQTT_BROKER);
+
+    const mqttOptions = {
+      protocol: process.env.MQTT_PROTOCOL,
+      username: process.env.MQTT_USERNAME,
+      password: process.env.MQTT_PASSWORD,
+    };
+    const mqttClient = mqtt.connect(process.env.MQTT_BROKER, mqttOptions);
 
     mqttClient.on("connect", function () {
       mqttClient.publish(deviceId, status, function (err) {
