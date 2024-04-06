@@ -4,7 +4,7 @@ currentPage:'devicelist'}) %>
 <div class="col-12">
   <div class="bg-light rounded h-100 p-4">
     <div class="my-4">
-      <h3 style="color: rgb(7, 117, 161)">
+      <h3 class="share-tech-regular" style="color: rgb(7, 117, 161)">
         List of devices that are connected to various sensors.
       </h3>
       <div class="table-responsive">
@@ -75,7 +75,6 @@ currentPage:'devicelist'}) %>
                     class="toggleButton btn btn-primary"
                     onclick="toggleStatus('<%= device.deviceId %>')"
                     data-device-id="<%= device.deviceId %>"
-                    type="button"
                   >
                     Publish
                   </button>

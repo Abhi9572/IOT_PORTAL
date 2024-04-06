@@ -290,11 +290,48 @@
   display: block;
 }
 
-@media (max-width: 994px) and (max-height: 532px) {
+/* Hide logo-circle on smaller screens */
+/* @media (max-width: 994px) and (max-height: 532px) {
   .logo-circle {
     display: none;
   }
+} */
+
+/* Display logo-circle on desktop screens */
+/* @media (min-width: 995px) or (min-height: 533px) {
+  .logo-circle {
+    display: block;
+  }
+} */
+
+@media (min-width: 555px) and (min-height: 532px) {
+  .navbar-brand {
+    display: block;
+    padding-top: 54px;
+  }
 }
+
+
+@media (max-width: 576px) {
+  .navbar-brand {
+    display: block;
+    padding-top: 54px;
+  }
+}
+
+.orbitron {
+  font-family: "Orbitron", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 40px;
+  font-style: normal;
+}
+
+.share-tech-regular {
+  font-family: "Share Tech", sans-serif;
+  font-weight: 40px;
+  font-style: normal;
+}
+
 
 /* Hide the default checkbox */
 .switch input {

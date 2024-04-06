@@ -84,6 +84,8 @@
             })
             .then(function (data) {
                 console.log(data);
+                // Reload the page after successfully updating the status
+                window.location.reload();
             })
             .catch((error) => console.error("Error:", error));
     }
