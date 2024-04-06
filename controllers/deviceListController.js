@@ -88,7 +88,6 @@ async function updateStatus(req, res) {
     };
     const mqttClient = mqtt.connect(process.env.MQTT_BROKER, mqttOptions);
 
-    console.log(mqttClient);
 
     mqttClient.on("connect", function () {
       mqttClient.publish(deviceId, status, function (err) {
