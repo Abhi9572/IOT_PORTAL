@@ -3,7 +3,7 @@ currentPage:'devicelist'}) %>
 
 <div class="col-12">
   <div class="bg-light rounded h-100 p-4">
-    <h2>Device Activity of <%= deviceName %> (ID: <%= deviceId %>)</h2>
+    <h2 style="color: rgb(7, 117, 161);">Device Activity of <%= deviceName %> (ID: <%= deviceId %>)</h2>
     <form action="/<%= deviceId %>/activity/download" method="get">
       <label for="startDate">Start Date:</label>
       <input type="date" id="startDate" name="startDate" required />

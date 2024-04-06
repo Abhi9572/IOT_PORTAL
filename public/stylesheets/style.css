@@ -290,6 +290,12 @@
   display: block;
 }
 
+@media (max-width: 994px) and (max-height: 532px) {
+  .logo-circle {
+    display: none;
+  }
+}
+
 /* Hide the default checkbox */
 .switch input {
   position: absolute;

@@ -30,7 +30,7 @@ module.exports = {
         // Subscribe to each device's topic
         devices.forEach((device) => {
           client.subscribe(device.deviceId);
-          //console.log(`Subscribed to topic ${device.deviceId}`);
+          console.log(`Subscribed to topic ${device.deviceId}`);
         });
       } catch (error) {
         console.error("Error fetching devices:", error);
@@ -55,12 +55,12 @@ module.exports = {
           if (deviceId && command) {
             // Check if the topic corresponds to a device of the user
             const device = await Device.findOne({ deviceId, user: user._id });
-            //console.log(device.statusDevice);
+            console.log(device.statusDevice);
 
             if (device && topic === device.deviceId) {
               // Check if the device status is already the same as the command
               if (device.statusDevice === command) {
-                //console.log(`Device is already ${command}`);
+                console.log(`Device is already ${command}`);
                 // Log the error or take appropriate action
                 return;
               }
@@ -82,7 +82,7 @@ module.exports = {
               );
               //console.log(updatedDevice);
               //console.log(
-               // `Device status saved for deviceId ${deviceId}: ${command}`
+              // `Device status saved for deviceId ${deviceId}: ${command}`
               //);
             } else {
               console.log(

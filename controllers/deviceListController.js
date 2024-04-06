@@ -1,5 +1,6 @@
 // controllers/deviceListController.js
 require("dotenv").config();
+//const verifyToken = require('../middleware/auth');
 const userModel = require("../models/users");
 const Device = require("../models/devices");
 const DeviceStatus = require("../models/DeviceStatus");
@@ -12,47 +13,39 @@ async function getDeviceList(req, res) {
         username: req.session.passport.user,
       })
       .populate("devices");
-    // console.log(user.username);
 
-    //const userName = await userModel.findOne({username: req.session.passport.user});
-    // console.log(userName);
-
-    // Calculate time range for fetching device statuses
-    const currentTime = new Date();
-    const oneMinuteBefore = new Date(currentTime.getTime() - 60000); // 1 minute before
-    const oneMinuteAfter = new Date(currentTime.getTime() + 60000); // 1 minute after
-
-    // Fetch device statuses within the time range
-    // const deviceStatuses = await DeviceStatus.find({
-    //   createdAt: { $gte: oneMinuteBefore, $lte: oneMinuteAfter },
-    // });
-    //const devices = await Device.find({ statusDevice });
-
+    if (!user) {
+      console.error("User not found.");
+      return res.render("error", { message: "User not found" });
+    }
+    // Set appropriate headers to prevent caching
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
 
     res.render("devicelist", {
       user: user,
-      
+
       error: req.flash("error"),
     }); // Pass device statuses to the view
-  } catch (err) {
-    console.error("Error fetching device list:", err);
-    res.status(500).send("Internal Server Error");
+  } catch (error) {
+    console.error("Error fetching device list:", error);
+    res.render("error", { message: "Internal server error" });
   }
 }
-
 
 async function updateStatus(req, res) {
   try {
     // Retrieve device ID and status from the request body
     const { status, deviceId } = req.body;
-    // return console.log({ status, deviceId });
 
     // Find the device in the database based on the deviceId
     const device = await Device.findOne({ deviceId });
 
     // Check if the device exists
     if (!device) {
-      return res.status(404).json({ error: "Device not found" });
+      console.error("User not found.");
+      return res.render("error", { message: "User not found" });
     }
 
     // Retrieve the user from the session
@@ -60,14 +53,12 @@ async function updateStatus(req, res) {
       username: req.session.passport.user,
     });
     //console.log(user);
+
     // Check if the user exists
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      console.error("User not found.");
+      return res.render("error", { message: "User not found" });
     }
-
-    // Update the device status
-    // device.status = status;
-    // await device.save();
 
     // Save the updated status to the DeviceStatus collection
     const deviceStatus = new DeviceStatus({
@@ -79,28 +70,46 @@ async function updateStatus(req, res) {
 
     // Save the deviceStatus object to the database
     await deviceStatus.save();
-    //console.log(deviceStatus);
-    const updatedDevice = await Device.findOneAndUpdate({ deviceId, user: user._id }, { statusDevice:status }, { new: true });
-    //console.log(updatedDevice);
 
-    // Optionally, you can perform additional actions here, such as sending notifications, etc.
+    // Update the device status in the Device collection
+    const updatedDevice = await Device.findOneAndUpdate(
+      { deviceId, user: user._id },
+      { statusDevice: status },
+      { new: true }
+    );
+
     // MQTT Broker Connection
     const mqttClient = mqtt.connect(process.env.MQTT_BROKER);
 
-    mqttClient.on('connect', function () {
+    mqttClient.on("connect", function () {
       mqttClient.publish(deviceId, status, function (err) {
         if (err) {
-          console.error('Error publishing MQTT message:', err);
-          res.status(500).json({ error: 'Error publishing MQTT message' });
+          //console.error('Error publishing MQTT message:', err);
+          res
+            .status(500)
+            .json({
+              success: "false",
+              message: "Error publishing MQTT message",
+            });
         } else {
-          res.status(200).json({ message: "Device status toggled successfully", device: updatedDevice });
+          res
+            .status(200)
+            .json({
+              success: "true",
+              message: "Device status toggled successfully",
+              device: updatedDevice,
+            });
         }
         mqttClient.end();
       });
     });
+    // Set appropriate headers to prevent caching
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
   } catch (error) {
     console.error("Error toggling device status:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.render("error", { message: "Internal server error" });
   }
 }
 

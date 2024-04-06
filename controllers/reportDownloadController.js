@@ -11,10 +11,10 @@ async function downloadReport(req, res) {
       "deviceId status createdAt"
     );
 
-    // Download the report data as an Excel file
+    // Generate Excel file
     const excelBuffer = await downloadReportData(deviceStatusData);
 
-    // Set the response headers for file download
+    // Send the Excel file as a response
     res.setHeader(
       "Content-Type",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -29,7 +29,7 @@ async function downloadReport(req, res) {
   } catch (error) {
     console.error("Error downloading report data:", error);
     // Handle errors as needed
-    res.status(500).send("Internal Server Error");
+    res.render("error", { message: "Internal server error" });
   }
 }
 

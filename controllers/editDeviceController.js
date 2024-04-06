@@ -5,17 +5,28 @@ const userModel = require("../models/users");
 exports.editDeviceForm = async function (req, res) {
   try {
     const deviceId = req.params.id;
-    console.log(deviceId);
 
     const device = await Device.findById(deviceId);
-    console.log(device);
 
     if (!device) {
-      return res.status(404).json({ error: "Device not found" });
+      console.error("User not found.");
+      return res.render("error", { message: "User not found" });
     }
+
     const user = await userModel.findOne({
       username: req.session.passport.user,
     });
+
+    // Check if the user exists
+    if (!user) {
+      console.error("User not found.");
+      return res.render("error", { message: "User not found" });
+    }
+
+    // Set appropriate headers to prevent caching
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
 
     // Render the edit device form with the device details
     res.render("editDevice", {
@@ -25,7 +36,7 @@ exports.editDeviceForm = async function (req, res) {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.render("error", { message: "Internal server error", error: error });
   }
 };
 
@@ -42,10 +53,15 @@ exports.updateDevice = async function (req, res) {
       { new: true }
     );
 
+    // Set appropriate headers to prevent caching
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+
     // Redirect to device list page after successful update
     res.redirect("/devicelist");
   } catch (error) {
     console.error(error);
-    res.status(500).send("Internal Server Error");
+    res.render("error", { message: "Internal server error", error: error });
   }
 };

@@ -1,5 +1,4 @@
 // controllers/activityController.js
-
 const userModel = require("../models/users");
 const deviceModel = require("../models/devices");
 const {
@@ -103,21 +102,17 @@ async function downloadReportData(deviceStatusData) {
 
 async function getActivity(req, res) {
   try {
+    // Extract deviceId from the request parameters
     const deviceId = req.params.deviceId;
-    //console.log(typeof deviceId);
 
-    // Get the user's username from the session
-    const username = req.session.passport.user;
-    //console.log(username);
-
-    // Find the user based on the username
-    const user = await userModel.findOne({ username });
-    //console.log(user._id);
-
+    // Retrieve the user from the session
+    const user = await userModel.findOne({
+      username: req.session.passport.user,
+    });
+    //console.log(user);
     if (!user) {
       console.error("User not found.");
-      req.flash("error", "User not found.");
-      return res.status(404).send("User not found");
+      return res.status(404).json({ error: "User not found" });
     }
 
     // Get the user's ID
@@ -125,32 +120,30 @@ async function getActivity(req, res) {
 
     // Assuming you have a function to calculate on/off durations
     const activity = await calculateOnOffDuration(deviceId, userId); // Call your calculateOnOffDuration function
-    //console.log(activity);
 
     // Find the device name associated with the deviceId
     const device = await deviceModel.findOne(
       { deviceId, user: userId },
       "deviceName"
     );
-    //console.log(device);
 
     // Check if device exists and extract its name
     const deviceName = device ? device.deviceName : "Unknown Device";
-    //console.log(deviceName);
 
-    const userDetail = await userModel.findOne({
-      username: req.session.passport.user,
-    });
+    // Set appropriate headers to prevent caching
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
 
     res.render("activity", {
       activity,
       deviceId,
       deviceName,
-      user: userDetail,
+      user: user,
     }); // Pass the activity data to the template
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).send({ success: false, error: "Internal Server Error" });
   }
 }
 

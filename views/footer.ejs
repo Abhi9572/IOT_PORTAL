@@ -55,52 +55,6 @@
         filterElement.addEventListener("change", handleFilterChange);
     });
 
-    // // Define the toggleStatus function
-    // function toggleStatus() {
-    //     var toggleButton = document.getElementById("toggleButton");
-    //     var currentStatusElement = document.getElementById("currentStatus");
-    //     var currentStatus = currentStatusElement.innerText.trim(); // Get the current status
-
-    //     // Toggle between "on" and "off"
-    //     var newStatus = currentStatus === "on" ? "off" : "on";
-
-    //     // Update the current status element with the new status
-    //     currentStatusElement.innerText = newStatus;
-
-    //     // Get the device ID and user ID from data attributes
-    //     var deviceId = toggleButton.dataset.deviceId;
-    //     //var userId = toggleButton.dataset.userId; // You may need to replace "your_user_id" with the actual user ID
-
-    //     // Send a POST request to the server to update the status in the database
-    //     var status = newStatus;
-
-    //     fetch("/updateStatus", {
-    //         method: "POST",
-    //         body: JSON.stringify({
-    //             deviceId: deviceId,
-    //             status: status
-    //         }),
-    //         headers: {
-    //             "Content-type": "application/json; charset=UTF-8",
-    //         },
-    //     })
-    //     .then(function (response) {
-    //         return response.json();
-    //     })
-    //     .then(function (data) {
-    //         console.log(data);
-    //     })
-    //     .catch((error) => console.error("Error:", error));
-    // }
-
-    // // Add event listener to call toggleStatus function when button is clicked
-    // document.addEventListener("DOMContentLoaded", function() {
-    //     var toggleButton = document.getElementById("toggleButton");
-    //     toggleButton.addEventListener("click", toggleStatus);
-    // });
-
-
-    // Define the toggleStatus function
     function toggleStatus(deviceId) {
 
 
@@ -135,10 +89,6 @@
     }
 
 </script>
-
-
-
-
 
 </body>
 

@@ -8,33 +8,45 @@ async function getReport(req, res) {
     const user = await userModel.findOne({
       username: req.session.passport.user,
     });
-    //device
-    // console.log(user.username);
-    // Fetch data from the DeviceStatus model
-    const result = await DeviceStatus.find(
+
+    if (!user) {
+      console.error("User not found.");
+      console.error("User not found.");
+      return res.render("error", { message: "User not found" });
+    }
+
+    // Fetch data from the DeviceStatus model for the authenticated user
+    const deviceStatusData = await DeviceStatus.find(
       { userId: user._id },
       "deviceId status userId createdAt"
-    );
-    const deviceStatusData = result.reverse()
-    //console.log(deviceStatusData);
+    ).sort({ createdAt: -1 });
+
+    // const deviceStatusData = result.reverse();
+    //   console.log(deviceStatusData);
+
+    // Set appropriate headers to prevent caching
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
 
     // Render the report.ejs file and pass the data to it
     res.render("report", { deviceStatusData, user: user });
   } catch (error) {
     console.error("Error fetching device status data:", error);
     // Handle errors as needed
-    res.status(500).send("Internal Server Error");
+    res.render("error", { message: "Internal server error" });
   }
 }
 
 async function getReportData(req, res) {
   const { deviceid, filter } = req.body;
+  console.log(deviceid, filter);
 
   try {
-    let statusData;
     const user = await userModel.findOne({
       username: req.session.passport.user,
     });
+    let statusData;
 
     switch (filter) {
       case "getDeviceById":
@@ -42,6 +54,7 @@ async function getReportData(req, res) {
           deviceId: deviceid,
           userId: user._id,
         });
+        console.log(statusData);
         break;
       case "getByDate":
         const date = req.body.date;
@@ -70,9 +83,16 @@ async function getReportData(req, res) {
         throw new Error("Invalid filter criteria");
     }
 
+    console.log(statusData);
+
     // Render the appropriate view based on the filter criteria
     switch (filter) {
       case "getDeviceById":
+        // Set appropriate headers to prevent caching
+        res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+        res.setHeader("Pragma", "no-cache");
+        res.setHeader("Expires", "0");
+
         res.render("reportByDeviceId", {
           statusData: statusData,
           userId: user._id,
@@ -80,6 +100,11 @@ async function getReportData(req, res) {
         });
         break;
       case "getByDate":
+        // Set appropriate headers to prevent caching
+        res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+        res.setHeader("Pragma", "no-cache");
+        res.setHeader("Expires", "0");
+
         res.render("reportByDeviceId", {
           statusData: statusData,
           userId: user._id,
@@ -87,6 +112,11 @@ async function getReportData(req, res) {
         });
         break;
       case "getByDateRange":
+        // Set appropriate headers to prevent caching
+        res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+        res.setHeader("Pragma", "no-cache");
+        res.setHeader("Expires", "0");
+
         res.render("reportByDeviceId", {
           statusData: statusData,
           userId: user._id,
@@ -98,7 +128,7 @@ async function getReportData(req, res) {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).send("Internal Server Error");
+    res.render("error", { message: "Internal server error" });
   }
 }
 
