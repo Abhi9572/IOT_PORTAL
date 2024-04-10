@@ -2,20 +2,40 @@
 currentPage:'devicelist'}) %>
 
 <div class="col-12">
-  <div class="bg-light rounded h-100 p-4">
-    <h2 class="share-tech-regular" style="color: rgb(7, 117, 161);">Device Activity of <%= deviceName %> (ID: <%= deviceId %>)</h2>
+  <div class="bg-white rounded h-100 p-4">
+    
+    <h2 class="share-tech-regular" style="color: rgb(7, 117, 161); padding-top: 27px; padding-bottom: 18px;">Device Activity of <%= deviceName %> (ID: <%= deviceId %>)</h2>
     <form action="/<%= deviceId %>/activity/download" method="get">
+      <div class="row">
+        <div class="col-md-4 mb-3 mb-md-0">
+          <div class="form-group">
+            <label for="startDate">Start Date:</label>
+            <input type="date" id="startDate" name="startDate" class="form-control" required />
+          </div>
+        </div>
+        <div class="col-md-4 mb-3 mb-md-0">
+          <div class="form-group">
+            <label for="endDate">End Date:</label>
+            <input type="date" id="endDate" name="endDate" class="form-control" required />
+          </div>
+        </div>
+        <div class="col-md-4 mb-3 mb-md-0" id="downloadbutton">
+          <div class="form-group" style="padding-top: 24px; padding-bottom: 18px;">
+            <button class="btn btn-primary btn-block" type="submit" onclick="return confirm('Do you want to download Activity Report data?')">Get Data</button>
+          </div>
+        </div>
+      </div>
+      
+  </form>
+    <!-- <div class="form-group">
+    
       <label for="startDate">Start Date:</label>
-      <input type="date" id="startDate" name="startDate" required />
+      <input type="date" id="startDate" name="startDate" class="form-control" required />
       <label for="endDate">End Date:</label>
-      <input type="date" id="endDate" name="endDate" required />
-      <button
-        type="submit"
-        onclick="return confirm('Do you want to download Activity Report data?')"
-      >
-        Filter
-      </button>
-    </form>
+      <input type="date" id="endDate" name="endDate" class="form-control"  required />
+     
+   
+  </div> -->
     <div class="table-responsive">
       <table class="table">
         <thead>

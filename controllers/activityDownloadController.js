@@ -41,9 +41,9 @@ async function downloadActivity(req, res) {
       { deviceId, user: user._id },
       "deviceName"
     );
-    console.log(device);
+    //console.log(device);
     const deviceName = device ? device.deviceName : "Unknown Device";
-    console.log(deviceName);
+    //console.log(deviceName);
 
     // Download activity data for the specified date range
     const excelData = await downloadActivityData(
@@ -53,7 +53,7 @@ async function downloadActivity(req, res) {
       startDateObj,
       endDateObj
     );
-    console.log(excelData);
+    //console.log(excelData);
 
     // If no activity data found for the specified date range, return a message
     if (!excelData) {

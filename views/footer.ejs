@@ -1,5 +1,5 @@
 <!-- Footer Start -->
-<div class="container-fluid pt-4 px-4">
+<div class="container-fluid pt-4 px-4 sticky-bottom px-4 py-0">
     <div class="bg-light rounded-top p-4">
         <div class="row">
             <div class="col-12 col-sm-6 text-center text-sm-start">
@@ -34,19 +34,23 @@
     // Define the handleFilterChange function
     function handleFilterChange() {
         var filter = this.value;
+        var deviceIdInput = document.getElementById("deviceidInput");
         var dateInputContainer = document.getElementById("dateInputContainer");
         var dateRangeInputContainer = document.getElementById("dateRangeInputContainer");
 
-        if (filter === "getByDate") {
-            dateRangeInputContainer.style.display = "none";
-            dateInputContainer.style.display = "block";
-        } else if (filter === "getByDateRange") {
-            dateInputContainer.style.display = "none";
-            dateRangeInputContainer.style.display = "block";
-        } else {
-            dateInputContainer.style.display = "none";
-            dateRangeInputContainer.style.display = "none";
-        }
+        // Hide all input fields initially
+    deviceIdInput.style.display = "none";
+    dateInputContainer.style.display = "none";
+    dateRangeInputContainer.style.display = "none";
+
+    // Display input fields based on the selected filter
+    if (filter === "getDeviceById") {
+        deviceIdInput.style.display = "block";
+    } else if (filter === "getByDate") {
+        dateInputContainer.style.display = "block";
+    } else if (filter === "getByDateRange") {
+        dateRangeInputContainer.style.display = "flex";
+    }
     }
 
     // Add event listener to call handleFilterChange function when filter element changes
@@ -55,6 +59,32 @@
         filterElement.addEventListener("change", handleFilterChange);
     });
 
+    document.addEventListener('DOMContentLoaded', function () {
+      const content = document.querySelector('.content');
+      const sidebarToggler = document.querySelector('.sidebar-toggler');
+      let clickCount = 0;
+      let clickTimer;
+
+      // Add click event listener to the content element
+      content.addEventListener('click', function () {
+        // Increment click count
+        clickCount++;
+
+        // Toggle sidebar when click count is even (two clicks)
+        if (clickCount % 2 === 0) {
+          sidebarToggler.click();
+        }
+
+        // Reset click count after 1 second
+        clearTimeout(clickTimer);
+        clickTimer = setTimeout(() => {
+          clickCount = 0;
+        }, 500); // Adjust the time interval as needed
+      });
+      //console.log(clickCount);
+    });
+
+    
     function toggleStatus(deviceId) {
 
 

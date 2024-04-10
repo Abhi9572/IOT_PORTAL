@@ -7,7 +7,7 @@ async function dashboard(req, res) {
     const user = await userModel.findOne({
       username: req.session.passport.user,
     });
-    console.log(user);
+    //console.log(user);
     if (!user) {
       console.error("User not found.");
       return res.render("error", { message: "User not found" });

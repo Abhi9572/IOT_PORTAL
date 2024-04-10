@@ -319,6 +319,17 @@
   }
 }
 
+/* Media query for smartphones */
+@media (max-width: 576px) {
+  #downloadbutton {
+    /* Adjust as needed for spacing */
+    text-align: center; /* Center the button */
+  }
+}
+
+
+
+
 .orbitron {
   font-family: "Orbitron", sans-serif;
   font-optical-sizing: auto;
