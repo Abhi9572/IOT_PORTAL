@@ -31,6 +31,7 @@
 
 <script src="/javascripts/main.js"></script>
 <script>
+
     // Define the handleFilterChange function
     function handleFilterChange() {
         var filter = this.value;
@@ -83,7 +84,32 @@
       });
       //console.log(clickCount);
     });
+    
+    // Function to dynamically change form action and submit
+  function submitForm(method) {
+    const reportForm = document.getElementById("reportForm");
+    const action = method === 'get' ? '/report/download' : '/report';
+    reportForm.action = action; // Set the form action attribute
+    reportForm.method = method; // Set the form method attribute
 
+    // Check if the method is 'get' (for downloading)
+    if (method === 'get') {
+      // If no filter method is selected, ask the user if they want to download all report data
+      if (document.getElementById("filter").value === "") {
+        if (!confirm("Do you want to download all Report Data? If not, choose a method to download filtered data")) {
+          return; // If the user cancels, do not submit the form
+        }
+      } else {
+        // If a filter method is selected, ask the user if they want to download the displayed data
+        if (!confirm("Do you want to download the filtered data?")) {
+          return; // If the user cancels, do not submit the form
+        }
+      }
+    }
+
+    // Submit the form
+    reportForm.submit();
+  }
     
     function toggleStatus(deviceId) {
 

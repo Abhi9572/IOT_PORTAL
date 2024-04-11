@@ -12,12 +12,13 @@ const settings = {
   username: process.env.MQTT_USERNAME,
   password: process.env.MQTT_PASSWORD,
 };
-
+console.log(settings);
 //let subscribedTopics = []; // Array to store subscribed topics
 
 module.exports = {
   init: function (user) {
     const client = mqtt.connect(mqtt_broker, settings);
+    console.log(client);
 
     // Subscribe to topics when connected
     client.on("connect", async function () {
@@ -25,7 +26,7 @@ module.exports = {
       try {
         // Fetch devices belonging to the current user from the database
         const devices = await Device.find({ user: user._id }, "deviceId");
-        //console.log(devices);
+        console.log(devices);
 
         // Subscribe to each device's topic
         devices.forEach((device) => {
@@ -42,14 +43,14 @@ module.exports = {
       try {
         // Parse the received message
         const payload = JSON.parse(message.toString());
-
+        console.log(payload);
         // Validate the message format
         if (isValidMessageFormat(payload)) {
           // Extract the necessary information from the payload
           const deviceId = payload.deviceId;
-          //console.log(deviceId);
+          console.log(deviceId);
           const command = payload.command;
-          //console.log(command);
+          console.log(command);
 
           // Check if deviceId and command are valid
           if (deviceId && command) {
@@ -71,7 +72,7 @@ module.exports = {
                 userId: device.user,
                 status: command,
               });
-              //console.log(deviceStatus);
+              console.log(deviceStatus);
 
               // Save the DeviceStatus document to the database
               await deviceStatus.save();
@@ -81,9 +82,9 @@ module.exports = {
                 { new: true }
               );
               //console.log(updatedDevice);
-              //console.log(
-              // `Device status saved for deviceId ${deviceId}: ${command}`
-              //);
+              console.log(
+               `Device status saved for deviceId ${deviceId}: ${command}`
+              );
             } else {
               console.log(
                 `Error: Device with deviceId ${deviceId} not found or topic does not match.`
@@ -92,12 +93,13 @@ module.exports = {
           }
         }
       } catch (error) {
-        console.error("Error processing message:", error);
+        //console.error("Error processing message:", error);
       }
     });
 
     // Function to validate the message format
     function isValidMessageFormat(payload) {
+      console.log(payload);
       // Perform validation according to your expected format
       // For example, check if the payload contains required keys or has the expected structure
       return (

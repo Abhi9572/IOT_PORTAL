@@ -62,7 +62,7 @@ router.get("/adddevice", isLoggedIn, addDeviceController.showAddDevice);
 
 router.post("/adddevice", isLoggedIn, addDeviceController.addDevice);
 
-router.post("/getReportData", isLoggedIn, reportController.getReportData);
+router.post("/report", isLoggedIn, reportController.getReportDataByFilter);
 
 //Define a route to render the report page
 
@@ -73,6 +73,8 @@ router.get(
   isLoggedIn,
   reportDownloadController.downloadReport
 );
+
+
 
 // POST route to update device status
 router.post("/toggleDevice", deviceListController.updateStatus);

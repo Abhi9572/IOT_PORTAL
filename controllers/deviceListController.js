@@ -87,10 +87,11 @@ async function updateStatus(req, res) {
       password: process.env.MQTT_PASSWORD,
     };
     const mqttClient = mqtt.connect(process.env.MQTT_BROKER, mqttOptions);
-
+    console.log(mqttClient);
 
     mqttClient.on("connect", function () {
       mqttClient.publish(deviceId, status, function (err) {
+        console.log(deviceId, status);
         if (err) {
           //console.error('Error publishing MQTT message:', err);
           res
@@ -107,8 +108,10 @@ async function updateStatus(req, res) {
               message: "Device status toggled successfully",
               device: updatedDevice,
             });
+            console.log(updatedDevice);
         }
         mqttClient.end();
+        console.log(mqttClient);
       });
     });
     // Set appropriate headers to prevent caching

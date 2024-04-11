@@ -21,8 +21,8 @@ async function getReport(req, res) {
       "deviceId status userId createdAt"
     ).sort({ createdAt: -1 });
 
-    // const deviceStatusData = result.reverse();
-    //   console.log(deviceStatusData);
+    // const devicedeviceStatusData = result.reverse();
+    //   console.log(devicedeviceStatusData);
 
     // Set appropriate headers to prevent caching
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
@@ -38,7 +38,7 @@ async function getReport(req, res) {
   }
 }
 
-async function getReportData(req, res) {
+async function getReportDataByFilter(req, res) {
   const { filter } = req.body;
   console.log(filter);
 
@@ -52,7 +52,7 @@ async function getReportData(req, res) {
     const user = await userModel.findOne({
       username: req.session.passport.user,
     });
-    let statusData;
+    let deviceStatusData;
 
     switch (filter) {
       case "getDeviceById":
@@ -62,12 +62,12 @@ async function getReportData(req, res) {
           req.flash("error", "Please provide a Device ID");
           return res.redirect("/report");
         }
-        statusData = await DeviceStatus.find({
+        deviceStatusData = await DeviceStatus.find({
           deviceId: deviceid,
           userId: user._id,
         });
-        //console.log(statusData);
-        if (statusData.length === 0) {
+        //console.log(deviceStatusData);
+        if (deviceStatusData.length === 0) {
           req.flash("error", "Device ID not found. Please provide a valid Device ID");
           return res.redirect("/report");
         }
@@ -83,11 +83,11 @@ async function getReportData(req, res) {
         startOfDay.setHours(0, 0, 0, 0);
         const endOfDay = new Date(date);
         endOfDay.setHours(23, 59, 59, 999);
-        statusData = await DeviceStatus.find({
+        deviceStatusData = await DeviceStatus.find({
           createdAt: { $gte: startOfDay, $lte: endOfDay },
           userId: user._id,
         });
-        if (statusData.length === 0) {
+        if (deviceStatusData.length === 0) {
           req.flash("error", "No device data found for the specified date.");
           return res.redirect("/report");
         }
@@ -104,11 +104,11 @@ async function getReportData(req, res) {
         startOfStartDate.setHours(0, 0, 0, 0);
         const endOfEndDate = new Date(endDate);
         endOfEndDate.setHours(23, 59, 59, 999);
-        statusData = await DeviceStatus.find({
+        deviceStatusData = await DeviceStatus.find({
           createdAt: { $gte: startOfStartDate, $lte: endOfEndDate },
           userId: user._id,
         });
-        if (statusData.length === 0) {
+        if (deviceStatusData.length === 0) {
           req.flash("error", "No device data found for the specified date range.");
           return res.redirect("/report");
         }
@@ -117,7 +117,7 @@ async function getReportData(req, res) {
         throw new Error("Invalid filter criteria");
     }
 
-    //console.log(statusData);
+    //console.log(deviceStatusData);
 
     // Render the appropriate view based on the filter criteria
     switch (filter) {
@@ -127,10 +127,11 @@ async function getReportData(req, res) {
         res.setHeader("Pragma", "no-cache");
         res.setHeader("Expires", "0");
 
-        res.render("reportByDeviceId", {
-          statusData: statusData,
+        res.render("report", {
+          deviceStatusData: deviceStatusData,
           userId: user._id,
           user,
+          error: req.flash("error"),
         });
         break;
       case "getByDate":
@@ -139,10 +140,11 @@ async function getReportData(req, res) {
         res.setHeader("Pragma", "no-cache");
         res.setHeader("Expires", "0");
 
-        res.render("reportByDeviceId", {
-          statusData: statusData,
+        res.render("report", {
+          deviceStatusData: deviceStatusData,
           userId: user._id,
           user,
+          error: req.flash("error"),
         });
         break;
       case "getByDateRange":
@@ -151,10 +153,11 @@ async function getReportData(req, res) {
         res.setHeader("Pragma", "no-cache");
         res.setHeader("Expires", "0");
 
-        res.render("reportByDeviceId", {
-          statusData: statusData,
+        res.render("report", {
+          deviceStatusData: deviceStatusData,
           userId: user._id,
           user,
+          error: req.flash("error")
         });
         break;
       default:
@@ -167,4 +170,48 @@ async function getReportData(req, res) {
   }
 }
 
-module.exports = { getReport, getReportData };
+async function generateReportForDeviceById(deviceId, userId) {
+  // Fetch data based on device ID and user ID
+  const deviceStatusData = await DeviceStatus.find({
+    deviceId: deviceId,
+    userId: userId,
+  }, "deviceId status createdAt");
+
+  return deviceStatusData;
+}
+
+async function generateReportForDate(date, userId) {
+  // Parse date string to Date object
+  const selectedDate = new Date(date);
+  // Set start and end of the selected date
+  const startOfDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), 0, 0, 0, 0);
+  const endOfDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), 23, 59, 59, 999);
+
+  // Fetch data within the selected date range and user ID
+  const deviceStatusData = await DeviceStatus.find({
+    createdAt: { $gte: startOfDay, $lte: endOfDay },
+    userId: userId,
+  }, "deviceId status createdAt");
+
+  return deviceStatusData;
+}
+
+async function generateReportForDateRange(startDate, endDate, userId) {
+  // Parse start date and end date strings to Date objects
+  const startOfStartDate = new Date(startDate);
+  const endOfEndDate = new Date(endDate);
+  // Set start of start date to beginning of the day and end of end date to end of the day
+  startOfStartDate.setHours(0, 0, 0, 0);
+  endOfEndDate.setHours(23, 59, 59, 999);
+
+  // Fetch data within the date range and user ID
+  const deviceStatusData = await DeviceStatus.find({
+    createdAt: { $gte: startOfStartDate, $lte: endOfEndDate },
+    userId: userId,
+  }, "deviceId status createdAt");
+
+  return deviceStatusData;
+}
+
+
+module.exports = { getReport, getReportDataByFilter, generateReportForDate, generateReportForDateRange,generateReportForDeviceById };
